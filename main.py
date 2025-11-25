@@ -5,7 +5,7 @@ from pathlib import Path
 import yt_dlp
 import imageio_ffmpeg
 from colorama import Fore, Back, Style, init
-from flask import Flask, request, render_template_string, send_from_directory, jsonify, redirect, url_for, Response
+from flask import Flask, request, render_template_string, send_from_directory, jsonify, redirect, url_for, Response, send_file, abort
 import threading
 import uuid
 import time
@@ -281,7 +281,7 @@ INDEX_TEMPLATE = """
   <nav class="navbar navbar-expand-md">
     <div class="container">
       <a class="navbar-brand brand d-flex align-items-center" href="{{ url_for('index') }}">
-        <img src="{{ url_for('static', filename='dls.png') }}" srcset="{{ url_for('static', filename='dls.png') }} 1x, {{ url_for('static', filename='dls@2x.png') }} 2x" alt="" class="brand-logo" decoding="async" onerror="this.style.display='none'" />
+        <img src="{{ url_for('dls_png') }}" alt="" class="brand-logo" decoding="async" onerror="this.style.display='none'" />
       </a>
       <div class="ms-auto">
         <a id="downloadsBtn" href="https://t.me/Marshallkss" class="btn btn-sm btn-primary" target="_blank" rel="noopener"><i class="bi bi-telegram me-1"></i>Dev</a>
@@ -1166,6 +1166,13 @@ def list_downloads():
 @app.get('/downloads/<path:filename>')
 def serve_download(filename):
     return send_from_directory(str(Path.home() / 'Downloads'), filename, as_attachment=True, download_name=filename)
+
+@app.get('/dls.png')
+def dls_png():
+    p = Path(__file__).parent / 'dls.png'
+    if not p.exists():
+        return abort(404)
+    return send_file(str(p), mimetype='image/png', as_attachment=False)
 
 # API para abrir la carpeta Descargas en el sistema
 @app.post('/api/open_downloads')
