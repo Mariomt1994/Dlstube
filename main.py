@@ -1,4 +1,4 @@
-import os
+ximport os
 import sys
 import re
 from pathlib import Path
@@ -15,7 +15,10 @@ import webbrowser
 # Inicializar colorama para Windows
 init(autoreset=True)
 
-
+export default defineConfig({
+  plugins: [react()],
+  base:"https://dlstube.yxz"
+  })
 # -----------------------------
 # Plantillas HTML (webapp)
 # -----------------------------
